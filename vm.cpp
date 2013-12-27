@@ -21,6 +21,15 @@ namespace GC {
 		VMObject* object = (VMObject *)malloc(sizeof(VMObject));
 		assert(object != NULL);
 		object->objectType = objectType;		
+		switch (objectType) {
+			case INT:
+				object->value = 0;
+				break;
+			case PAIR:
+				object->first = NULL;
+				object->second = NULL;
+				break;
+		}
 		object->isMarked = 0;
 
 		object->next = firstObject;
@@ -36,7 +45,29 @@ namespace GC {
 
 	void VM::markAll() {
 		for (int i = 0; i < stackSize ; ++i) {
-			objectStack[i]
+			markObject(objectStack[i]);
+		}
+	}
+
+	void VM::markObject(VMObject* myObject) {
+		if (myObject == NULL || myObject->isMarked != 0) {
+			return;
+		}
+		myObject->isMarked = 1;
+		switch (myObject->objectType) {
+			case PAIR:
+				markObject(myObject->first);
+				markObject(myObject->second);
+				break;
+			case INT:
+				break;
+		}
+	}
+
+	void VM::cleanAll() {
+		VMObject* myObject = firstObject;
+		while (myObject != NULL) {
+
 		}
 	}
 }

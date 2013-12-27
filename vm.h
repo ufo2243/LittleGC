@@ -30,7 +30,7 @@ public:
     VM();
     ~VM();
     void PushObject(VMObject* myObject);
-    VMObject PopObject();
+    VMObject* PopObject();
 	VMObject* NewObject(ObjectType objectType);
 	void gc();
 
@@ -39,7 +39,7 @@ private:
 	void markAll();
 	void cleanAll();
 	void markObject(VMObject* myObject);
-    VMObject objectStack[MAX_STACK_SIZE];
+    VMObject* objectStack[MAX_STACK_SIZE];
 	VMObject* firstObject;
 };
 
