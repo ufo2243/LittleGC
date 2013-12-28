@@ -30,7 +30,7 @@ namespace GC {
 				object->second = NULL;
 				break;
 		}
-		object->isMarked = 0;
+		object->isMark = 0;
 
 		object->next = firstObject;
 		firstObject = object;
@@ -50,10 +50,10 @@ namespace GC {
 	}
 
 	void VM::markObject(VMObject* myObject) {
-		if (myObject == NULL || myObject->isMarked != 0) {
+		if (myObject == NULL || myObject->isMark != 0) {
 			return;
 		}
-		myObject->isMarked = 1;
+		myObject->isMark = 1;
 		switch (myObject->objectType) {
 			case PAIR:
 				markObject(myObject->first);
@@ -65,9 +65,34 @@ namespace GC {
 	}
 
 	void VM::cleanAll() {
-		VMObject* myObject = firstObject;
-		while (myObject != NULL) {
+		//find the first object which next is not NULL
+		while (firstObject != NULL) {
+			if (firstObject->isMark == 0) {
+				VMObject* tempObject = firstObject;
+				firstObject = firstObject->next;
+				free(tempObject);
+			}
+			else {
+				firstObject->isMark = 0;
+				break;
+			}
+		}
+		if (firstObject == NULL) {
+			return;
+		}
 
+		VMObject* myObject = firstObject;
+		while (myObject->next != NULL) {
+			if (myObject->next->isMark == 1) {
+				myObject->next->isMark = 0;
+				myObject = myObject->next;
+			}
+			else {
+				VMObject* tempObject = myObject->next;
+				myObject->next = myObject->next->next;
+				myObject = myObject->next;
+				free(tempObject);
+			}	
 		}
 	}
 }

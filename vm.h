@@ -21,7 +21,7 @@ typedef struct sObject{
             sObject *second;
         };
     };
-	int isMarked;				// 0 for not marked,not 0 for marked
+	int isMark;				// 0 for not marked,not 0 for marked
 	sObject* next;
 }VMObject;
 
