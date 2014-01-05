@@ -1,4 +1,4 @@
 LittleGC
 ========
 
-little garbage collector
+little garbage collector (unfinished)
